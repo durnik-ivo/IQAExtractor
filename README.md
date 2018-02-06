@@ -20,6 +20,6 @@ awk -f IQEne.awk > file.txt
 
 ### Nomenclature:
 Fragment(Geometry,Vicinity)
-- Fragment: A or B
-- Geometry: Complex or Opt
-- Vicinity: A or B or Free
+- Fragment:     A or B
+- Geometry:     Complex or Opt
+- Vicinity:     A or B or Free
