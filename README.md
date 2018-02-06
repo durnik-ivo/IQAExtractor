@@ -8,7 +8,12 @@ AWK scripts for extracting binging energies and delocalization indices from IQA 
 
 ### Usage:
 - each script comes with USER EDIT SECTION, which needs to be set
-- scripts can be run as:
+- in terminal, scripts can be run as:
 ```
 awk -f IQEne.awk
 ```
+- to save text output into a file:
+```
+awk -f IQEne.awk > file.txt
+```
+- scripts are pre-set for examplary \*.sum files included in the repository
