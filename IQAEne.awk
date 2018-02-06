@@ -25,11 +25,11 @@ BEGIN {
 # AB
 ABSumFile = "at.sum"
 
-# A(Complex) / B(Complex)
+# A(Complex,Free) / B(Complex,Free)
 AFreeSumFile = "t.sum"
 BFreeSumFile = "a.sum"
 
-# A(Opt) / B(Opt)
+# A(Opt,Free) / B(Opt,Free)
 AOptSumFile = "t_opt.sum"
 BOptSumFile = "a_opt.sum"
 
@@ -41,7 +41,7 @@ fragmentB = "16-30"
 # Produce xyz files to check fragment selection? (yes = 1 / no = 0)
 #
 # If control=1, script will write three structure files: AB.xyz, A.xyz and B.xyz
-# Geometries are extracted from ABSumFile, complex is splited according to user selection
+# Geometries are extracted from ABSumFile, complex is splitted according to user selection
 control = 1;
 
 

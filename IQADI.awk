@@ -27,6 +27,9 @@ fragmentA = "1-15"
 fragmentB = "16-30"
 
 # Produce xyz files to check fragment selection? (yes = 1 / no = 0)
+#
+# If control=1, script will write three structure files: AB.xyz, A.xyz and B.xyz
+# Geometries are extracted from ABSumFile, complex is splitted according to user selection
 control = 1;
 
 
