@@ -10,7 +10,6 @@
 #       3) For output into file run as "awk -f IQAExtractor.awk > file.txt"
 #       4) Carefully check results, especially your definition of fragments and sum files
 #
-# Version: 0.3.3
 # Author: Ivo Durnik
 # Contact: durnik@mail.muni.cz
 #

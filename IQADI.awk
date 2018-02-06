@@ -9,7 +9,6 @@
 #       3) For text output run as "awk -f IQAExtractor.awk > file.txt"
 #       4) Carefully check results, especially your selection of fragments
 #
-# Version: 0.3.3
 # Author: Ivo Durnik
 # Contact: durnik@mail.muni.cz
 #
