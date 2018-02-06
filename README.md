@@ -17,6 +17,7 @@ awk -f IQEne.awk
 awk -f IQEne.awk > file.txt
 ```
 - scripts are pre-set for examplary \*.sum files included in the repository
+- switching control option on (`control=1`) produces \*.xyz files to check fragment definition (Use any molecular editor, e.g. Avogadro, VMD)
 
 ### Nomenclature:
 Fragment(Geometry,Vicinity)
