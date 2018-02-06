@@ -19,16 +19,16 @@ awk -f IQEne.awk > file.txt
 - scripts are pre-set for examplary \*.sum files included in the repository
 
 ### Nomenclature:
-Fragment(Geometry,Vicinity)
-- Fragment:
+**Fragment** ( **Geometry**, **Vicinity**)
+- **Fragment:**
 
    A or B
 
-- Geometry:
+- **Geometry:**
 
    Complex or Opt
 
-- Vicinity:
+- **Vicinity:**
 
    A or B or Free
 
