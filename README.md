@@ -34,6 +34,6 @@ Fragment(Geometry,Vicinity)
 
    A or B or Free
 
-Intra = intraatomic contributions
-Inter = interatomic contributions
-Total = Intra + Inter
+Intra = intraatomic contributions  
+Inter = interatomic contributions  
+Total = Intra + Inter  
