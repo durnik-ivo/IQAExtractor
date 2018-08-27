@@ -34,19 +34,28 @@ AOptSumFile = "t_opt.sum"
 BOptSumFile = "a_opt.sum"
 
 # Specify atom numbers inside ABSumFile
+#
 # Syntax: "1,2,3" OR "1-3" OR "1-2,3"
 fragmentA = "1-15"
 fragmentB = "16-30"
 
 # Produce xyz files to check fragment selection? (yes = 1 / no = 0)
 #
-# If control=1, script will write three structure files: AB.xyz, A.xyz and B.xyz
-# Geometries are extracted from ABSumFile, complex is splitted according to user selection
+# If control=1, script will write xyz files extracted from AIMALL sum files 
+# (AB.xyz, A.xyz, AFree.xyz, AOpt.xyz, B.xyz, BFree.xyz, BOpt.xyz)
+# Complex is splited according to user selection
 control = 1;
 
+# Change reference state, default "all" to consider all atoms in Free and Opt sum files, 
+# don't change unless you know what you are doing
+#
+# Syntax: "all" OR "1,2,3" OR "1-3" OR "1-2,3"
+refA = "all"
+refB = "all"
 
 # END OF USER EDIT SECTION
 #############################################################################
+
 #############################################################################
 # PREPARE ANALYSIS
 #############################################################################
@@ -63,12 +72,21 @@ fileN = 1;
 myNR = 1;
 
 N = 1;
+
 NA = 1;
 NB = 1;
+
 NAFree = 1;
 NBFree = 1;
+
+NACountFree = 1;
+NBCountFree = 1;
+
 NAOpt = 1;
 NBOpt = 1;
+
+NACountOpt = 1;
+NBCountOpt = 1;
 
 pos = 0;
 pos2 = 0;
@@ -83,16 +101,16 @@ ARGV[2] = AFreeSumFile;
 ARGV[3] = BFreeSumFile;
 ARGV[4] = AOptSumFile;
 ARGV[5] = BOptSumFile;
-ARGC=6;
+ARGC = 6;
 
 
 # Split atom numbers defining molecular fragments into arrays
-NsetA = split(fragmentA,setA,",");
+NsetA = split(fragmentA, setA, ",");
 for(i in setA) {
-    NSubSet = split(setA[i],subSet,"-");
+    NSubSet = split(setA[i], subSet, "-");
     if(NSubSet > 1) {
-        for(j=subSet[1]; j<=subSet[2]; j++) {
-            if( j == subSet[1] ){
+        for(j = subSet[1]; j <= subSet[2]; j++) {
+            if(j == subSet[1]){
                 delete setA[i];
                 NsetA++
             }
@@ -102,18 +120,53 @@ for(i in setA) {
     }
 }
 
-NsetB = split(fragmentB,setB,",");
+NsetB = split(fragmentB, setB, ",");
 for(i in setB) {
-   NSubSet = split(setB[i],subSet,"-");
+   NSubSet = split(setB[i], subSet, "-");
     if(NSubSet > 1) {
-        for(j=subSet[1]; j<=subSet[2]; j++) {
-            if( j == subSet[1] ){
+        for(j = subSet[1]; j <= subSet[2]; j++) {
+            if(j == subSet[1]){
                 delete setB[i];
                 NsetB++
             }
             setB[NsetB] = j;
             NsetB++;
         } 
+    }
+}
+
+# Split atom numbers for reference states
+if(refA != "all") {
+    NsetRefA = split(refA, setRefA, ",");
+    for(i in setRefA) {
+        NSubSet = split(setRefA[i], subSet, "-");
+        if(NSubSet > 1) {
+            for(j = subSet[1]; j <= subSet[2]; j++) {
+                if(j == subSet[1]) {
+                    delete setRefA[i];
+                    NsetRefA++
+                }
+                setRefA[NsetRefA] = j;
+                NsetRefA++;
+            } 
+        }
+    }
+}
+
+if(refB != "all") {
+    NsetRefB = split(refB, setRefB, ",");
+    for(i in setRefB) {
+       NSubSet = split(setRefB[i], subSet, "-");
+        if(NSubSet > 1) {
+            for(j = subSet[1]; j <= subSet[2]; j++) {
+                if(j == subSet[1]) {
+                    delete setRefB[i];
+                    NsetRefB++
+                }
+                setRefB[NsetRefB] = j;
+                NsetRefB++;
+            } 
+        }
     }
 }
 
@@ -378,11 +431,25 @@ if(fileN == 1) {
         pos = myNR;
     }
     if(bool1 == 1 && NF != 0 && myNR > pos+3){
-        AFree[NAFree] = $1;
-        AFreex[NAFree] = $3;
-        AFreey[NAFree] = $4;
-        AFreez[NAFree] = $5;
-        NAFree++;
+        if(refA == "all") {
+            AFree[NAFree] = $1;
+            AFreex[NAFree] = $3;
+            AFreey[NAFree] = $4;
+            AFreez[NAFree] = $5;
+            NAFree++;
+        } else {
+            for(atom in setRefA) {
+                if(setRefA[atom] == NACountFree) {
+                    AFree[NAFree] = $1;
+                    AFreex[NAFree] = $3;
+                    AFreey[NAFree] = $4;
+                    AFreez[NAFree] = $5;
+                    NAFree++;
+                    break;
+                }
+            }
+        }
+        NACountFree++;
     }
 
     if(NF == 0 ) {
@@ -395,16 +462,21 @@ if(fileN == 1) {
         pos = myNR;
     }
     if( bool3 == 1 && myNR > pos+12){
+        atomA = -1
         for(atom in AFree){
             if(AFree[atom] == $1){
-                atomA = atom;
+                AFreeSelfT[atom] = $3;
+                AFreeSelfVne[atom] = $4;
+                AFreeSelfVeeC[atom] = $6;
+                AFreeSelfVeeX[atom] = $7;
+                AFreeSelfVel[atom] = $4+$6;
             }
         }
-        AFreeSelfT[atomA] = $3;
-        AFreeSelfVne[atomA] = $4;
-        AFreeSelfVeeC[atomA] = $6;
-        AFreeSelfVeeX[atomA] = $7;
-        AFreeSelfVel[atomA] = $4+$6;
+        #AFreeSelfT[atomA] = $3;
+        #AFreeSelfVne[atomA] = $4;
+        #AFreeSelfVeeC[atomA] = $6;
+        #AFreeSelfVeeX[atomA] = $7;
+        #AFreeSelfVel[atomA] = $4+$6;
     }
     if( bool3 == 1 && myNR == pos+12+NAFree-1 ) {
         bool3 = 0;
@@ -475,12 +547,25 @@ if(fileN == 1) {
         pos = myNR;
     }
     if(bool1 == 1 && NF != 0 && myNR > pos+3){
-
-        BFree[NBFree] = $1;
-        BFreex[NBFree] = $3;
-        BFreey[NBFree] = $4;
-        BFreez[NBFree] = $5;
-        NBFree++;
+        if(refB == "all") {
+            BFree[NBFree] = $1;
+            BFreex[NBFree] = $3;
+            BFreey[NBFree] = $4;
+            BFreez[NBFree] = $5;
+            NBFree++;
+        } else {
+            for(atom in setRefB) {
+                if(setRefB[atom] == NBCountFree) {
+                    BFree[NBFree] = $1;
+                    BFreex[NBFree] = $3;
+                    BFreey[NBFree] = $4;
+                    BFreez[NBFree] = $5;
+                    NBFree++;
+                    break;
+                }
+            }
+        }
+        NBCountFree++;
     }
     if(NF == 0) {
         bool1=0;
@@ -573,12 +658,26 @@ if(fileN == 1) {
         bool1 = 1;
         pos = myNR;
     }
-    if(bool1 == 1 && NF != 0 && myNR > pos+3){
-        AOpt[NAOpt] = $1;
-        AOptx[NAOpt] = $3;
-        AOpty[NAOpt] = $4;
-        AOptz[NAOpt] = $5;
-        NAOpt++;
+    if(bool1 == 1 && NF != 0 && myNR > pos+3) {
+        if(refA == "all") {
+            AOpt[NAOpt] = $1;
+            AOptx[NAOpt] = $3;
+            AOpty[NAOpt] = $4;
+            AOptz[NAOpt] = $5;
+            NAOpt++;
+        } else {
+            for(atom in setRefA) {
+                if(setRefA[atom] == NACountOpt) {
+                    AOpt[NAOpt] = $1;
+                    AOptx[NAOpt] = $3;
+                    AOpty[NAOpt] = $4;
+                    AOptz[NAOpt] = $5;
+                    NAOpt++;
+                    break;
+                }
+            }
+        }
+        NACountOpt++;
     }
     if(NF == 0 ) {
         bool1 = 0;
@@ -669,14 +768,29 @@ if(fileN == 1) {
         bool1 = 1;
         pos = myNR;
     }
-    if(bool1 == 1 && NF != 0 && myNR > pos+3){
 
-        BOpt[NBOpt] = $1;
-        BOptx[NBOpt] = $3;
-        BOpty[NBOpt] = $4;
-        BOptz[NBOpt] = $5;
-        NBOpt++;
+    if(bool1 == 1 && NF != 0 && myNR > pos+3){
+        if(refB == "all") {
+            BOpt[NBOpt] = $1;
+            BOptx[NBOpt] = $3;
+            BOpty[NBOpt] = $4;
+            BOptz[NBOpt] = $5;
+            NBOpt++;
+        } else {
+            for(atom in setRefB) {
+                if(setRefB[atom] == NBCountOpt) {
+                    BOpt[NBOpt] = $1;
+                    BOptx[NBOpt] = $3;
+                    BOpty[NBOpt] = $4;
+                    BOptz[NBOpt] = $5;
+                    NBOpt++;
+                    break;
+                }
+            }
+        }
+        NBCountOpt++;
     }
+
     if(NF == 0) {
         bool1=0;
     }
@@ -1292,6 +1406,7 @@ if( control == 1 ) {
     printf("\n");
     printf("Control output is switched ON\n");
     printf("Writing:\n")
+
     # Complex AB
     printf("== AB.xyz\n")
     print N-1 > "AB.xyz";
@@ -1320,6 +1435,46 @@ if( control == 1 ) {
         element = B[i];
         sub(/[0-9]{1,}/, "", element);
         printf("%s\t%f\t%f\t%f\n", element, Bx[i]*au, By[i]*au, Bz[i]*au) >> "B.xyz";
+    }
+
+    # Reference A - Free
+    printf("== AFree.xyz\n")
+    print NAFree-1 > "AFree.xyz";
+    print "" >> "AFree.xyz";
+    for(i = 1; i < NAFree; i++) {
+        element = AFree[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, AFreex[i]*au, AFreey[i]*au, AFreez[i]*au) >> "AFree.xyz";
+    }
+
+    # Reference B - Free
+    printf("== BFree.xyz\n")
+    print NBFree-1 > "BFree.xyz";
+    print "" >> "BFree.xyz";
+    for(i = 1; i < NBFree; i++) {
+        element = BFree[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, BFreex[i]*au, BFreey[i]*au, BFreez[i]*au) >> "BFree.xyz";
+    }
+
+    # Reference A - Opt
+    printf("== AOpt.xyz\n")
+    print NAOpt-1 > "AOpt.xyz";
+    print "" >> "AOpt.xyz";
+    for(i = 1; i < NAOpt; i++) {
+        element = AOpt[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, AOptx[i]*au, AOpty[i]*au, AOptz[i]*au) >> "AOpt.xyz";
+    }
+
+    # Reference B - Opt
+    printf("== BOpt.xyz\n")
+    print NBOpt-1 > "BOpt.xyz";
+    print "" >> "BOpt.xyz";
+    for(i = 1; i < NBOpt; i++) {
+        element = BOpt[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, BOptx[i]*au, BOpty[i]*au, BOptz[i]*au) >> "BOpt.xyz";
     }
 }
 
