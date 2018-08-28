@@ -1,6 +1,6 @@
 # IQAExtractor
 
-AWK scripts for extracting binging energies, delocalization indices and atomic charges from IQA analysis by program AIMALL. 
+AWK scripts for extracting binging energies, delocalization indices and atomic charges from IQA analysis by program [AIMALL](http://aim.tkgristmill.com/). 
 
 ### Package consist of:
 - [IQAEne.awk](./IQAEne.awk) - bindin energies
@@ -17,7 +17,7 @@ awk -f IQEne.awk
 ```
 awk -f IQEne.awk > file.txt
 ```
-- scripts are pre-set for examplary \*.sum files included in the repository
+- scripts are pre-set for examplary [\*.sum files](./examples) included in the repository
 - switching control option on (`control = 1`) produces \*.xyz files to check user fragment definition 
 (Use any molecular editor, e.g. [Avogadro](https://avogadro.cc/), [VMD](http://www.ks.uiuc.edu/Research/vmd/))
 
