@@ -274,25 +274,11 @@ if(fileN == 1) {
         pos = myNR;
     }
     if(bool1 == 1 && NF != 0 && myNR > pos+3){
-        if(refA == "all") {
-            AFree[NAFree] = $1;
-            AFreex[NAFree] = $3;
-            AFreey[NAFree] = $4;
-            AFreez[NAFree] = $5;
-            NAFree++;
-        } else {
-            for(atom in setRefA) {
-                if(setRefA[atom] == NACountFree) {
-                    AFree[NAFree] = $1;
-                    AFreex[NAFree] = $3;
-                    AFreey[NAFree] = $4;
-                    AFreez[NAFree] = $5;
-                    NAFree++;
-                    break;
-                }
-            }
-        }
-        NACountFree++;
+        AFree[NAFree] = $1;
+        AFreex[NAFree] = $3;
+        AFreey[NAFree] = $4;
+        AFreez[NAFree] = $5;
+        NAFree++;
     }
 
     if(NF == 0 ) {
@@ -309,6 +295,7 @@ if(fileN == 1) {
         for(atom in AFree){
             if(AFree[atom] == $1){
                 AFreeChrg[atom] = $2;
+
             }
         }
     }
@@ -327,25 +314,11 @@ if(fileN == 1) {
         pos = myNR;
     }
     if(bool1 == 1 && NF != 0 && myNR > pos+3){
-        if(refB == "all") {
-            BFree[NBFree] = $1;
-            BFreex[NBFree] = $3;
-            BFreey[NBFree] = $4;
-            BFreez[NBFree] = $5;
-            NBFree++;
-        } else {
-            for(atom in setRefB) {
-                if(setRefB[atom] == NBCountFree) {
-                    BFree[NBFree] = $1;
-                    BFreex[NBFree] = $3;
-                    BFreey[NBFree] = $4;
-                    BFreez[NBFree] = $5;
-                    NBFree++;
-                    break;
-                }
-            }
-        }
-        NBCountFree++;
+        BFree[NBFree] = $1;
+        BFreex[NBFree] = $3;
+        BFreey[NBFree] = $4;
+        BFreez[NBFree] = $5;
+        NBFree++;
     }
     if(NF == 0) {
         bool1=0;
@@ -377,25 +350,11 @@ if(fileN == 1) {
         pos = myNR;
     }
     if(bool1 == 1 && NF != 0 && myNR > pos+3) {
-        if(refA == "all") {
-            AOpt[NAOpt] = $1;
-            AOptx[NAOpt] = $3;
-            AOpty[NAOpt] = $4;
-            AOptz[NAOpt] = $5;
-            NAOpt++;
-        } else {
-            for(atom in setRefA) {
-                if(setRefA[atom] == NACountOpt) {
-                    AOpt[NAOpt] = $1;
-                    AOptx[NAOpt] = $3;
-                    AOpty[NAOpt] = $4;
-                    AOptz[NAOpt] = $5;
-                    NAOpt++;
-                    break;
-                }
-            }
-        }
-        NACountOpt++;
+        AOpt[NAOpt] = $1;
+        AOptx[NAOpt] = $3;
+        AOpty[NAOpt] = $4;
+        AOptz[NAOpt] = $5;
+        NAOpt++;
     }
     if(NF == 0 ) {
         bool1 = 0;
@@ -429,25 +388,11 @@ if(fileN == 1) {
     }
 
     if(bool1 == 1 && NF != 0 && myNR > pos+3){
-        if(refB == "all") {
-            BOpt[NBOpt] = $1;
-            BOptx[NBOpt] = $3;
-            BOpty[NBOpt] = $4;
-            BOptz[NBOpt] = $5;
-            NBOpt++;
-        } else {
-            for(atom in setRefB) {
-                if(setRefB[atom] == NBCountOpt) {
-                    BOpt[NBOpt] = $1;
-                    BOptx[NBOpt] = $3;
-                    BOpty[NBOpt] = $4;
-                    BOptz[NBOpt] = $5;
-                    NBOpt++;
-                    break;
-                }
-            }
-        }
-        NBCountOpt++;
+        BOpt[NBOpt] = $1;
+        BOptx[NBOpt] = $3;
+        BOpty[NBOpt] = $4;
+        BOptz[NBOpt] = $5;
+        NBOpt++;
     }
 
     if(NF == 0) {
@@ -568,5 +513,83 @@ printf("------------------------------------------------------------------------
 printf(" Sum  %20.10f %20.10f %20.10f\n", totBChrg, totBFreeChrg, totBOptChrg);
 printf("\n");
 printf("\n");
+
+# Print xyz files for control of correct selection of FragmentA and FragmentB
+if( control == 1 ) {
+    printf("\n");
+    printf("Control output is switched ON\n");
+    printf("Writing:\n")
+
+    # Complex AB
+    printf("== AB.xyz\n")
+    print N-1 > "AB.xyz";
+    print "" >> "AB.xyz";
+    for(i=1; i<N; i++) {
+        element = AB[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, ABx[i]*au, ABy[i]*au, ABz[i]*au) >> "AB.xyz";
+    }
+
+    # Fragment A
+    printf("== A.xyz\n")
+    print NA-1 > "A.xyz";
+    print "" >> "A.xyz";
+    for(i=1; i<NA; i++) {
+        element = A[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, Ax[i]*au, Ay[i]*au, Az[i]*au) >> "A.xyz";
+    }
+
+    # Fragment B
+    printf("== B.xyz\n")
+    print NB-1 > "B.xyz";
+    print "" >> "B.xyz";
+    for(i=1; i<NB; i++) {
+        element = B[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, Bx[i]*au, By[i]*au, Bz[i]*au) >> "B.xyz";
+    }
+
+    # Reference A - Free
+    printf("== AFree.xyz\n")
+    print NAFree-1 > "AFree.xyz";
+    print "" >> "AFree.xyz";
+    for(i = 1; i < NAFree; i++) {
+        element = AFree[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, AFreex[i]*au, AFreey[i]*au, AFreez[i]*au) >> "AFree.xyz";
+    }
+
+    # Reference B - Free
+    printf("== BFree.xyz\n")
+    print NBFree-1 > "BFree.xyz";
+    print "" >> "BFree.xyz";
+    for(i = 1; i < NBFree; i++) {
+        element = BFree[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, BFreex[i]*au, BFreey[i]*au, BFreez[i]*au) >> "BFree.xyz";
+    }
+
+    # Reference A - Opt
+    printf("== AOpt.xyz\n")
+    print NAOpt-1 > "AOpt.xyz";
+    print "" >> "AOpt.xyz";
+    for(i = 1; i < NAOpt; i++) {
+        element = AOpt[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, AOptx[i]*au, AOpty[i]*au, AOptz[i]*au) >> "AOpt.xyz";
+    }
+
+    # Reference B - Opt
+    printf("== BOpt.xyz\n")
+    print NBOpt-1 > "BOpt.xyz";
+    print "" >> "BOpt.xyz";
+    for(i = 1; i < NBOpt; i++) {
+        element = BOpt[i];
+        sub(/[0-9]{1,}/, "", element);
+        printf("%s\t%f\t%f\t%f\n", element, BOptx[i]*au, BOpty[i]*au, BOptz[i]*au) >> "BOpt.xyz";
+    }
+
+}
 }
 
