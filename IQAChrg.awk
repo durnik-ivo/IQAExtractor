@@ -23,15 +23,15 @@ BEGIN {
 # Specify Sum files
 #
 # AB
-ABSumFile = "at.sum"
+ABSumFile = "examples/at.sum"
 
 # A(Complex,Free) / B(Complex,Free)
-AFreeSumFile = "t.sum"
-BFreeSumFile = "a.sum"
+AFreeSumFile = "examples/t.sum"
+BFreeSumFile = "examples/a.sum"
 
 # A(Opt,Free) / B(Opt,Free)
-AOptSumFile = "t_opt.sum"
-BOptSumFile = "a_opt.sum"
+AOptSumFile = "examples/t_opt.sum"
+BOptSumFile = "examples/a_opt.sum"
 
 # Specify atom numbers inside ABSumFile
 #

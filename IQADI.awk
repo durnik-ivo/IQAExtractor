@@ -19,7 +19,7 @@ BEGIN {
 # START OF USER EDIT SECTION
 
 # Specify Sum file
-sumFile = "at.sum"
+sumFile = "examples/at.sum"
 
 # Specify selection for desired fragments
 # Syntax: "1,2,3" OR "1-3" OR "1-2,3"
