@@ -1,10 +1,11 @@
 # IQAExtractor
 
-AWK scripts for extracting binging energies and delocalization indices from IQA analysis by program AIMALL. 
+AWK scripts for extracting binging energies, delocalization indices and atomic charges from IQA analysis by program AIMALL. 
 
-### Package consist of two scripts:
+### Package consist of:
 - [IQAEne.awk](./IQAEne.awk) - bindin energies
-- [IQADI.awk](./IQDI.awk) - delocalization indices
+- [IQADI.awk](./IQADI.awk) - delocalization indices
+- [IQAChrg.awk](./IQAChrg.awk) - atomic charges
 
 ### Usage:
 - each script comes with **USER EDIT SECTION**, which needs to be set
