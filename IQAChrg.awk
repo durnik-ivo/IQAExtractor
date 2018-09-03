@@ -331,7 +331,7 @@ if(fileN == 1) {
     }
     if( bool3 == 1 && myNR > pos+9){
         atomB = -1
-        for(atom in AFree){
+        for(atom in BFree){
             if( BFree[atom] == $1 ) {
                 BFreeChrg[atom] = $2;
             }
