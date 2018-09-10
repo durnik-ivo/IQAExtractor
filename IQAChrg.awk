@@ -54,6 +54,14 @@ control = 1;
 au = 0.529177249;
 # a.u. -> kcal/mol
 kcal = 627.509608;
+# joule -> kcal/mol
+J2kcal = 0.000239005736 * 6.02214086 * 10**23
+# pi
+pi = 3.14159265359;
+# permitivity
+eps0 = 8.854187817620 * 10**(-12)
+# elementary charge
+e = 1.602177 * 10**(-19)
 
 # Helper variables
 currentFile = "";
@@ -443,7 +451,6 @@ if( exitSwitch == 1) {
 }
 
 # Initialize helper variables
-
 # AB
 totABChrg = 0.0;
 
@@ -465,6 +472,23 @@ totAOptChrg = 0.0;
 # B(Opt,Free)
 totBOptChrg = 0.0;
 
+# Coulombic interaction
+el = 0.0;
+elTot = 0.0;
+for(i=1; i<NA; i++) {
+    for(j=1; j<NB; j++) {
+        distX = (Ax[i]-Bx[j])*(Ax[i]-Bx[j]);
+        distY = (Ay[i]-By[j])*(Ay[i]-By[j]);
+        distZ = (Az[i]-Bz[j])*(Az[i]-Bz[j]);
+        dist = sqrt( distX + distY + distZ ) * au;
+        el = 1/(4*pi*eps0) * AChrg[i] * e * BChrg[j] * e / (dist*au*10**(-10)) * J2kcal;
+        elTot += el;
+    }
+}
+#exit(0);
+
+# OUTPUT
+#
 # Nomenclature
 printf(" Nomenclature:\n");
 printf(" Fragment(Geometry,Vicinity)\n");
@@ -473,7 +497,6 @@ printf(" Vicinity - A, B, or Free\n");
 printf("\n");
 
 # Total AB charge check
-
 for(i=1; i<NA; i++) {
     totABChrg += AChrg[i];
 }
@@ -511,6 +534,10 @@ for(i=1; i<NB; i++) {
 }
 printf("-------------------------------------------------------------------------------------------------------------------------------------\n");
 printf(" Sum  %20.10f %20.10f %20.10f\n", totBChrg, totBFreeChrg, totBOptChrg);
+printf("\n");
+printf("\n");
+
+printf("AB Coulombic Interaction: %20.2f kcal/mol", elTot);
 printf("\n");
 printf("\n");
 
