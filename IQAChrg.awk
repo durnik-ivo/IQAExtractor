@@ -477,15 +477,14 @@ el = 0.0;
 elTot = 0.0;
 for(i=1; i<NA; i++) {
     for(j=1; j<NB; j++) {
-        distX = (Ax[i]-Bx[j])*(Ax[i]-Bx[j]);
-        distY = (Ay[i]-By[j])*(Ay[i]-By[j]);
-        distZ = (Az[i]-Bz[j])*(Az[i]-Bz[j]);
-        dist = sqrt( distX + distY + distZ ) * au;
-        el = 1/(4*pi*eps0) * AChrg[i] * e * BChrg[j] * e / (dist*au*10**(-10)) * J2kcal;
+        distX = (Ax[i]-Bx[j])**2;
+        distY = (Ay[i]-By[j])**2;
+        distZ = (Az[i]-Bz[j])**2;
+        dist = sqrt( distX + distY + distZ );
+        el = ( 1/(4*pi*eps0) ) * AChrg[i] * e * BChrg[j] * e / ( dist*au*10**(-10) ) * J2kcal; # kcal/mol
         elTot += el;
     }
 }
-#exit(0);
 
 # OUTPUT
 #
